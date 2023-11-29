@@ -1,10 +1,12 @@
 package com.co.MauricioMunoz.PruebaTecnica.service;
 
 import com.co.MauricioMunoz.PruebaTecnica.dto.request.ClientDTORequest;
+import com.co.MauricioMunoz.PruebaTecnica.dto.request.PhoneDTOResquest;
 import com.co.MauricioMunoz.PruebaTecnica.dto.response.ClientDTOResponse;
 import com.co.MauricioMunoz.PruebaTecnica.exception.BussinesException;
 import com.co.MauricioMunoz.PruebaTecnica.mapper.ClientMapper;
 import com.co.MauricioMunoz.PruebaTecnica.model.Client;
+import com.co.MauricioMunoz.PruebaTecnica.model.Phone;
 import com.co.MauricioMunoz.PruebaTecnica.repository.ClientRepository;
 import com.co.MauricioMunoz.PruebaTecnica.service.Imp.ClientServices;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Optional;
+import java.util.Collections;
 import java.util.UUID;
 
 public class ClientService {
@@ -38,7 +40,16 @@ public class ClientService {
     @Test
     void testCreate() {
 
-        ClientDTORequest clientDTORequest= ClientDTORequest.builder().email("test@example.com").build();
+        ClientDTORequest clientDTORequest = ClientDTORequest.builder()
+                .name("Juan Rodriguez")
+                .email("mmsssg@rodriguez.org")
+                .password("hunter2")
+                .phones(Collections.singletonList(PhoneDTOResquest.builder()
+                        .number("1234567")
+                        .cityCode("1")
+                        .contryCode("57")
+                        .build()))
+                .build();
 //TODO call clave personalizada
 //TODO Validar que los mail los coja en el formato deceado
 
@@ -51,8 +62,8 @@ public class ClientService {
     @Test
     void testCreate_DuplicateEmail() {
 
-        ClientDTORequest clientDTORequest =ClientDTORequest.builder().build();
-        clientDTORequest.setEmail("test@example.com");
+        ClientDTORequest clientDTORequest =ClientDTORequest.builder().email("test@example.com").build();
+        when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().email("test@example.com").build());
         when(clientRepository.findByEmail(clientDTORequest.getEmail())).thenReturn(Client.builder().build());
         assertThrows(BussinesException.class, () -> clientServices.create(clientDTORequest));
     }
@@ -68,15 +79,33 @@ public class ClientService {
     void testUpdateClient() {
 //TODO call clave personalizada
         ClientDTORequest clientDTORequest = ClientDTORequest.builder()
-                .id(UUID.randomUUID())
+                .name("Juan Rodriguez")
+                .email("mmsssg@rodriguez.org")
+                .password("hunter2")
+                .phones(Collections.singletonList(PhoneDTOResquest.builder()
+                        .number("1234567")
+                        .cityCode("1")
+                        .contryCode("57")
+                        .build()))
                 .build();
 
+        Client client = Client.builder()
+                .name("Juan Rodriguez")
+                .email("mmsssg@rodriguez.org")
+                .password("hunter2")
+                .phones(Collections.singletonList(Phone.builder()
+                        .number("1234567")
+                        .cityCode("1")
+                        .countryCode("57")
+                        .build()))
+                .build();
+        UUID clientId = UUID.randomUUID();
         Client clientFromRepository = Client.builder().build();
 
-        when(clientRepository.findById(clientDTORequest.getId())).thenReturn(clientFromRepository);
+        when(clientRepository.findById(clientId)).thenReturn(client);
         when(clientRepository.save(any(Client.class))).thenReturn(clientFromRepository);
 
-        ClientDTOResponse result = clientServices.updateClient(clientDTORequest);
+        ClientDTOResponse result = clientServices.updateClient(clientId, clientDTORequest);
 
         assertNotNull(result);
     }
@@ -91,18 +120,5 @@ public class ClientService {
         assertNotNull(result);
     }
 
-/*TODO validacion de exprecion irregular si se puede preguntar.
 
-    private final String claveExpresionRegular;
-
-    @Autowired
-    public ClaveService(String claveExpresionRegular) {
-        this.claveExpresionRegular = claveExpresionRegular;
-    }
-
-    public boolean validarClave(String clave) {
-        Pattern pattern = Pattern.compile(claveExpresionRegular);
-        return pattern.matcher(clave).matches();
-    }
-*/
 }

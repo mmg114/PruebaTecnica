@@ -24,17 +24,17 @@ public class ClientController {
     public ResponseEntity<ClientDTOResponse> createUser( @RequestBody ClientDTORequest clientDTORequest) {
         return new ResponseEntity<>(clienteServices.create(clientDTORequest), HttpStatus.ACCEPTED);
     }
-    @GetMapping("/{userId}")
+    @GetMapping("/{clientId}")
     public ResponseEntity<ClientDTOResponse> getUser(@PathVariable UUID clientId) {
         return new ResponseEntity<>(clienteServices.getClient(clientId), HttpStatus.OK);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<ClientDTOResponse> updateUser(  @RequestBody ClientDTORequest clientDTORequest) {
-        return new ResponseEntity<>(clienteServices.updateClient(clientDTORequest), HttpStatus.OK);
+    @PutMapping("/{clientId}")
+    public ResponseEntity<ClientDTOResponse> updateUser(@PathVariable UUID clientId,  @RequestBody ClientDTORequest clientDTORequest) {
+        return new ResponseEntity<>(clienteServices.updateClient(clientId,clientDTORequest), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{clientId}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID clientId) {
 
         clienteServices.deleteClient(clientId);

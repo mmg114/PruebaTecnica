@@ -11,11 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 @Scope("singleton")
@@ -34,11 +30,6 @@ public class ClientServices implements IClienteServices {
     }
 
 
-
-
-
-
-
     @Override
     public ClientDTOResponse create(ClientDTORequest clientDTORequest) {
         Client clientTmp = clientMapper.convertToEntity(clientDTORequest);
@@ -55,14 +46,23 @@ public class ClientServices implements IClienteServices {
     }
 
     @Override
-    public ClientDTOResponse updateClient(ClientDTORequest clientDTORequest) {
-        Client clientTmp=clientRepository.findById(clientDTORequest.getId());
-        return createResponse(clientRepository.save(clientTmp));
+    public ClientDTOResponse updateClient(UUID clientId, ClientDTORequest clientDTORequest) {
+        getClient(clientId);
+        Client clientTmp = clientMapper.convertToEntity(clientDTORequest);
+        ClientDTOResponse clientDTOResponse=createResponse(clientRepository.save(clientTmp));
+        clientDTOResponse.setModified(new Date());
+        return clientDTOResponse ;
     }
 
     @Override
     public ClientDTOResponse getClient(UUID clientId) {
-        return  createResponse(clientRepository.findById(clientId));
+       Client client=clientRepository.findById(clientId);
+        if (client != null) {
+            return  createResponse(client);
+        }else{
+            throw new BussinesException("No existe el usuario con id: "+clientId);
+        }
+
     }
 
     private ClientDTOResponse createResponse(Client cliente) {

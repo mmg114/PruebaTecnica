@@ -17,6 +17,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="CLIENT")
 public class Client {
@@ -38,6 +39,7 @@ public class Client {
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "client")
     private List<Phone> phones= new ArrayList<>();
+
 
 
 }

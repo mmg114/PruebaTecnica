@@ -10,7 +10,7 @@ public interface IClienteServices {
 
    void deleteClient(UUID clientId);
 
-   ClientDTOResponse updateClient(ClientDTORequest clientDTORequest);
+   ClientDTOResponse updateClient(UUID clientId, ClientDTORequest clientDTORequest);
 
    ClientDTOResponse getClient(UUID clientId);
 }
