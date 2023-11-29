@@ -8,6 +8,7 @@ import com.co.MauricioMunoz.PruebaTecnica.model.Client;
 import com.co.MauricioMunoz.PruebaTecnica.repository.ClientRepository;
 import com.co.MauricioMunoz.PruebaTecnica.service.IClienteServices;
 import com.co.MauricioMunoz.PruebaTecnica.utilities.EmailValidator;
+import com.co.MauricioMunoz.PruebaTecnica.utilities.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,13 @@ public class ClientServices implements IClienteServices {
 
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
+    private  final PasswordValidator passwordValidator;
 
     @Autowired
-    public ClientServices(ClientRepository clientRepository, ClientMapper clientMapper) {
+    public ClientServices(ClientRepository clientRepository, ClientMapper clientMapper, PasswordValidator passwordValidator) {
         this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
-
+        this.passwordValidator = passwordValidator;
     }
 
 
@@ -44,6 +46,10 @@ public class ClientServices implements IClienteServices {
         if (EmailValidator.isValidEmail(clientDTORequest.getEmail())==false){
             throw new BussinesException("El correo no cumple con el formato  aaaaaaa@dominio.cl");
         }
+        if (passwordValidator.isValidPassword(clientTmp.getPassword()) == false) {
+            throw new BussinesException("Contraseña no cumple el criterio minimo de seguridad ");
+        }
+
         clientTmp.setCreationDate(new Date());
         clientTmp.setActive(true);
         return createResponse(clientRepository.save(clientTmp));
