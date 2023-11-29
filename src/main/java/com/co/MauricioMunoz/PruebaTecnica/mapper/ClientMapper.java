@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ClientMapper {
 
 
-        public static Client convertToEntity(ClientDTORequest clientDTORequest) {
+        public  Client convertToEntity(ClientDTORequest clientDTORequest) {
             return  Client.builder()
                     .name(clientDTORequest.getName())
                     .email(clientDTORequest.getEmail())
@@ -23,7 +23,7 @@ public class ClientMapper {
                     .build();
         }
 
-        private static List<Phone> convertToPhoneList(List<PhoneDTOResquest> phoneDTOResquests) {
+        private  List<Phone> convertToPhoneList(List<PhoneDTOResquest> phoneDTOResquests) {
             if (phoneDTOResquests != null) {
                 return phoneDTOResquests.stream()
                         .map(ClientMapper::convertToEntity)

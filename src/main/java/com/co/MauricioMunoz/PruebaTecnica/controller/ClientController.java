@@ -21,7 +21,7 @@ public class ClientController {
 
 
     @PostMapping
-    public ResponseEntity<ClientDTOResponse> createUser(@Valid @RequestBody ClientDTORequest clientDTORequest) {
+    public ResponseEntity<ClientDTOResponse> createUser( @RequestBody ClientDTORequest clientDTORequest) {
         return new ResponseEntity<>(clienteServices.create(clientDTORequest), HttpStatus.ACCEPTED);
     }
     @GetMapping("/{userId}")
@@ -30,7 +30,7 @@ public class ClientController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<ClientDTOResponse> updateUser( @Valid @RequestBody ClientDTORequest clientDTORequest) {
+    public ResponseEntity<ClientDTOResponse> updateUser(  @RequestBody ClientDTORequest clientDTORequest) {
         return new ResponseEntity<>(clienteServices.updateClient(clientDTORequest), HttpStatus.OK);
     }
 
