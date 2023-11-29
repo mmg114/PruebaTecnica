@@ -1,7 +1,7 @@
 package com.co.MauricioMunoz.PruebaTecnica.mapper;
 
-import com.co.MauricioMunoz.PruebaTecnica.dto.ClientDTO;
-import com.co.MauricioMunoz.PruebaTecnica.dto.PhoneDTO;
+import com.co.MauricioMunoz.PruebaTecnica.dto.request.ClientDTORequest;
+import com.co.MauricioMunoz.PruebaTecnica.dto.request.PhoneDTOResquest;
 import com.co.MauricioMunoz.PruebaTecnica.model.Client;
 import com.co.MauricioMunoz.PruebaTecnica.model.Phone;
 import org.springframework.stereotype.Component;
@@ -14,34 +14,34 @@ import java.util.stream.Collectors;
 public class ClientMapper {
 
 
-        public static Client convertToEntity(ClientDTO clientDTO) {
+        public static Client convertToEntity(ClientDTORequest clientDTORequest) {
             return  Client.builder()
-                    .name(clientDTO.getName())
-                    .email(clientDTO.getEmail())
-                    .password(clientDTO.getPassword())
-                    .phones(convertToPhoneList(clientDTO.getPhones()))
+                    .name(clientDTORequest.getName())
+                    .email(clientDTORequest.getEmail())
+                    .password(clientDTORequest.getPassword())
+                    .phones(convertToPhoneList(clientDTORequest.getPhones()))
                     .build();
         }
 
-        private static List<Phone> convertToPhoneList(List<PhoneDTO> phoneDTOs) {
-            if (phoneDTOs != null) {
-                return phoneDTOs.stream()
+        private static List<Phone> convertToPhoneList(List<PhoneDTOResquest> phoneDTOResquests) {
+            if (phoneDTOResquests != null) {
+                return phoneDTOResquests.stream()
                         .map(ClientMapper::convertToEntity)
                         .collect(Collectors.toList());
             }
             return Collections.emptyList();
         }
 
-        public static Phone convertToEntity(PhoneDTO phoneDTO) {
+        public static Phone convertToEntity(PhoneDTOResquest phoneDTOResquest) {
             return Phone.builder()
-                    .number(phoneDTO.getNumber())
-                    .cityCode(phoneDTO.getCityCode())
-                    .countryCode(phoneDTO.getContryCode())
+                    .number(phoneDTOResquest.getNumber())
+                    .cityCode(phoneDTOResquest.getCityCode())
+                    .countryCode(phoneDTOResquest.getContryCode())
                     .build();
         }
 
-    public ClientDTO convertToDTO(Client client) {
-        return  ClientDTO.builder()
+    public ClientDTORequest convertToDTO(Client client) {
+        return  ClientDTORequest.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .email(client.getEmail())
@@ -50,7 +50,7 @@ public class ClientMapper {
                 .build();
     }
 
-    private List<PhoneDTO> convertToPhoneDTOList(List<Phone> phones) {
+    private List<PhoneDTOResquest> convertToPhoneDTOList(List<Phone> phones) {
         if (phones != null) {
             return phones.stream()
                     .map(this::convertToDTO)
@@ -59,8 +59,8 @@ public class ClientMapper {
         return Collections.emptyList();
     }
 
-    public PhoneDTO convertToDTO(Phone phone) {
-        return PhoneDTO.builder()
+    public PhoneDTOResquest convertToDTO(Phone phone) {
+        return PhoneDTOResquest.builder()
                 .number(phone.getNumber())
                 .cityCode(phone.getCityCode())
                 .contryCode(phone.getCountryCode())

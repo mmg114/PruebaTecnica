@@ -1,4 +1,4 @@
-package com.co.MauricioMunoz.PruebaTecnica.dto;
+package com.co.MauricioMunoz.PruebaTecnica.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class ClientDTO {
+public class ClientDTORequest {
 
     private UUID id;
     @NotNull(message = "Debe ingresar un nombre de Cliente")
@@ -20,5 +20,5 @@ public class ClientDTO {
     private String email;
     @NotNull(message = "Debe ingresar una contraseña")
     private String password;
-    private List<PhoneDTO> phones;
+    private List<PhoneDTOResquest> phones;
 }

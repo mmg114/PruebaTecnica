@@ -5,6 +5,9 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +28,9 @@ public class Client {
     private UUID id;
     @Column(name = "EMAIL", length = 50, nullable = false)
     private String email;
+    @NotBlank
+    @NotNull
+    @NotEmpty
     @Column(name = "NAME", length = 100, nullable = false)
     private String name;
     @Column(name = "PASSWORD", length = 50, nullable = false)
@@ -33,6 +39,5 @@ public class Client {
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "client")
     private List<Phone> phones= new ArrayList<>();
 
-    //TODO fecha de creacion modificacion ultimo ingreso generacion de jwt isactivo
 
 }
