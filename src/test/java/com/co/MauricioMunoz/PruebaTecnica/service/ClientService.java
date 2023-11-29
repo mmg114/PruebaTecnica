@@ -50,8 +50,7 @@ public class ClientService {
                         .contryCode("57")
                         .build()))
                 .build();
-//TODO call clave personalizada
-//TODO Validar que los mail los coja en el formato deceado
+
 
         when(clientRepository.findByEmail(clientDTORequest.getEmail())).thenReturn(null);
         when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().build());
@@ -77,7 +76,7 @@ public class ClientService {
     }
     @Test
     void testUpdateClient() {
-//TODO call clave personalizada
+
         ClientDTORequest clientDTORequest = ClientDTORequest.builder()
                 .name("Juan Rodriguez")
                 .email("mmsssg@rodriguez.org")

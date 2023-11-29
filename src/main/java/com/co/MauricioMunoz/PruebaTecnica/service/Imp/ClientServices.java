@@ -72,7 +72,7 @@ public class ClientServices implements IClienteServices {
 
         return clientDTOResponse ;
     }
-//TODO solo debe traer Los activos
+
     @Override
     public ClientDTOResponse getClient(UUID clientId) {
        Client client=clientRepository.findByIdAndActive(clientId,ACTIVE);
