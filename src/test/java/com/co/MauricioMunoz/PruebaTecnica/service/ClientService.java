@@ -72,7 +72,7 @@ public class ClientService {
     void testDeleteClient() {
 
         UUID clientId = UUID.randomUUID();
-        when(clientRepository.findById(clientId)).thenReturn((Client.builder().build()));
+        when(clientRepository.findByIdAndActive(clientId,true)).thenReturn((Client.builder().build()));
         assertDoesNotThrow(() -> clientServices.deleteClient(clientId));
     }
     @Test
@@ -102,7 +102,7 @@ public class ClientService {
         UUID clientId = UUID.randomUUID();
         Client clientFromRepository = Client.builder().build();
 
-        when(clientRepository.findById(clientId)).thenReturn(client);
+        when(clientRepository.findByIdAndActive(clientId,true)).thenReturn(client);
         when(clientRepository.save(any(Client.class))).thenReturn(clientFromRepository);
 
         ClientDTOResponse result = clientServices.updateClient(clientId, clientDTORequest);
@@ -115,7 +115,7 @@ public class ClientService {
 
         UUID clientId = UUID.randomUUID();
         Client clientFromRepository = Client.builder().build();
-        when(clientRepository.findById(clientId)).thenReturn(clientFromRepository);
+        when(clientRepository.findByIdAndActive(clientId,true)).thenReturn(clientFromRepository);
         ClientDTOResponse result = clientServices.getClient(clientId);
         assertNotNull(result);
     }

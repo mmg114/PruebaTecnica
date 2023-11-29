@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +40,18 @@ public class Client {
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "client")
     private List<Phone> phones= new ArrayList<>();
+
+
+    @Column(name = "CREATION_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate;
+
+    @Column(name = "MODIFICATION_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modificationDate;
+
+    @Column(name = "STATUS")
+    private boolean active;
 
 
 

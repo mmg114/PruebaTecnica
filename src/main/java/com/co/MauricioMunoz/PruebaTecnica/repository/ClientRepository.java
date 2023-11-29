@@ -12,7 +12,8 @@ import java.util.UUID;
 public interface ClientRepository extends JpaRepository<Client,Long> {
 
 
-    Client findById(@Param("userId") UUID cliendId);
+    Client findByIdAndActive( UUID cliendId ,Boolean active);
 
     Client findByEmail(String email);
+
 }

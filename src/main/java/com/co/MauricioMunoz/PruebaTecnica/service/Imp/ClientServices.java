@@ -7,6 +7,7 @@ import com.co.MauricioMunoz.PruebaTecnica.mapper.ClientMapper;
 import com.co.MauricioMunoz.PruebaTecnica.model.Client;
 import com.co.MauricioMunoz.PruebaTecnica.repository.ClientRepository;
 import com.co.MauricioMunoz.PruebaTecnica.service.IClienteServices;
+import com.co.MauricioMunoz.PruebaTecnica.utilities.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import java.util.UUID;
 @Service
 public class ClientServices implements IClienteServices {
 
+    private final Boolean ACTIVE=true;
+    private final Boolean INACTIVE=false;
 
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
@@ -37,26 +40,36 @@ public class ClientServices implements IClienteServices {
         if (tieneCorre!= null){
             throw new BussinesException("Ya existe un Cliente con ese correo");
         }
+
+        if (EmailValidator.isValidEmail(clientDTORequest.getEmail())==false){
+            throw new BussinesException("El correo no cumple con el formato  aaaaaaa@dominio.cl");
+        }
+        clientTmp.setCreationDate(new Date());
+        clientTmp.setActive(true);
         return createResponse(clientRepository.save(clientTmp));
     }
 
     @Override
     public void deleteClient(UUID clientId) {
-        clientRepository.delete(clientRepository.findById(clientId));
+       Client client= clientRepository.findByIdAndActive(clientId,ACTIVE);
+       client.setModificationDate(new Date());
+       client.setActive(false);
+       clientRepository.delete(client);
     }
 
     @Override
     public ClientDTOResponse updateClient(UUID clientId, ClientDTORequest clientDTORequest) {
         getClient(clientId);
         Client clientTmp = clientMapper.convertToEntity(clientDTORequest);
+        clientTmp.setModificationDate(new Date());
         ClientDTOResponse clientDTOResponse=createResponse(clientRepository.save(clientTmp));
-        clientDTOResponse.setModified(new Date());
+
         return clientDTOResponse ;
     }
-
+//TODO solo debe traer Los activos
     @Override
     public ClientDTOResponse getClient(UUID clientId) {
-       Client client=clientRepository.findById(clientId);
+       Client client=clientRepository.findByIdAndActive(clientId,ACTIVE);
         if (client != null) {
             return  createResponse(client);
         }else{
