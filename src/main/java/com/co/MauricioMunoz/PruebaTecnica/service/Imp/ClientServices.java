@@ -8,6 +8,7 @@ import com.co.MauricioMunoz.PruebaTecnica.model.Client;
 import com.co.MauricioMunoz.PruebaTecnica.repository.ClientRepository;
 import com.co.MauricioMunoz.PruebaTecnica.service.IClienteServices;
 import com.co.MauricioMunoz.PruebaTecnica.utilities.EmailValidator;
+import com.co.MauricioMunoz.PruebaTecnica.utilities.JwtToken;
 import com.co.MauricioMunoz.PruebaTecnica.utilities.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -27,11 +28,14 @@ public class ClientServices implements IClienteServices {
     private final ClientMapper clientMapper;
     private  final PasswordValidator passwordValidator;
 
+    private final JwtToken jwtTokenService;
+
     @Autowired
-    public ClientServices(ClientRepository clientRepository, ClientMapper clientMapper, PasswordValidator passwordValidator) {
+    public ClientServices(ClientRepository clientRepository, ClientMapper clientMapper, PasswordValidator passwordValidator, JwtToken jwtTokenService) {
         this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
         this.passwordValidator = passwordValidator;
+        this.jwtTokenService = jwtTokenService;
     }
 
 
@@ -49,8 +53,11 @@ public class ClientServices implements IClienteServices {
         if (passwordValidator.isValidPassword(clientTmp.getPassword()) == false) {
             throw new BussinesException("Contraseña no cumple el criterio minimo de seguridad ");
         }
+        clientTmp.setToken(jwtTokenService.generateToken(clientTmp.getEmail()));
+
 
         clientTmp.setCreationDate(new Date());
+        clientTmp.setLastLogin(new Date());
         clientTmp.setActive(true);
         return createResponse(clientRepository.save(clientTmp));
     }
@@ -89,7 +96,9 @@ public class ClientServices implements IClienteServices {
                 ClientDTOResponse
                         .builder()
                         .id(cliente.getId())
-                        .created(new Date())
+                        .created(cliente.getCreationDate())
+                        .lastLogin(cliente.getLastLogin())
+                        .modified(cliente.getModificationDate())
                         .isActive(true)
                         .token(UUID.randomUUID()).build();
     }

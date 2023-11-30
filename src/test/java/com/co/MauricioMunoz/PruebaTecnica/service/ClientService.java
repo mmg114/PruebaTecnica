@@ -54,10 +54,10 @@ public class ClientService {
                         .contryCode("57")
                         .build()))
                 .build();
-
+        UUID randomUUID = UUID.randomUUID();
 
         when(clientRepository.findByEmail(clientDTORequest.getEmail())).thenReturn(null);
-        when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().email("aaaaaaa@dominio.cl").password("hunter2").build());
+        when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().id(randomUUID).email("aaaaaaa@dominio.cl").password("hunter2").build());
         when(passwordValidator.isValidPassword(anyString())).thenReturn(true);
         when(clientRepository.save(any(Client.class))).thenReturn(Client.builder().build());
         assertDoesNotThrow(() -> clientServices.create(clientDTORequest));

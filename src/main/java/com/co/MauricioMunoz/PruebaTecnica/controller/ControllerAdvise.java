@@ -53,6 +53,12 @@ public class ControllerAdvise {
         ErrorDTO errorDTO = ErrorDTO.builder().mensaje("La entidad no puede llegar null").build();
         return new ResponseEntity<>(errorDTO, HttpStatus.CONFLICT);
     }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = NullPointerException.class)
+    public ResponseEntity<ErrorDTO> nullPointerExcetion(NullPointerException ex){
+        ErrorDTO errorDTO = ErrorDTO.builder().mensaje("Error En la operacion Contactar con admin").build();
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+    }
 
 }
 

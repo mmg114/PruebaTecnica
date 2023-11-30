@@ -53,6 +53,14 @@ public class Client {
     @Column(name = "STATUS")
     private boolean active;
 
+    @Column(name = "TOKEN")
+    private String token;
+
+    @Column(name = "LAST_LOGIN")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLogin;
+
+
 
 
 }
