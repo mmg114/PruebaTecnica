@@ -9,6 +9,7 @@ import com.co.MauricioMunoz.PruebaTecnica.model.Client;
 import com.co.MauricioMunoz.PruebaTecnica.model.Phone;
 import com.co.MauricioMunoz.PruebaTecnica.repository.ClientRepository;
 import com.co.MauricioMunoz.PruebaTecnica.service.Imp.ClientServices;
+import com.co.MauricioMunoz.PruebaTecnica.utilities.PasswordValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,6 +33,9 @@ public class ClientService {
     @InjectMocks
     private ClientServices clientServices;
 
+    @Mock
+    private PasswordValidator passwordValidator;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -42,7 +46,7 @@ public class ClientService {
 
         ClientDTORequest clientDTORequest = ClientDTORequest.builder()
                 .name("Juan Rodriguez")
-                .email("mmsssg@rodriguez.org")
+                .email("aaaaaaa@dominio.cl")
                 .password("hunter2")
                 .phones(Collections.singletonList(PhoneDTOResquest.builder()
                         .number("1234567")
@@ -53,7 +57,8 @@ public class ClientService {
 
 
         when(clientRepository.findByEmail(clientDTORequest.getEmail())).thenReturn(null);
-        when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().build());
+        when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().email("aaaaaaa@dominio.cl").password("hunter2").build());
+        when(passwordValidator.isValidPassword(anyString())).thenReturn(true);
         when(clientRepository.save(any(Client.class))).thenReturn(Client.builder().build());
         assertDoesNotThrow(() -> clientServices.create(clientDTORequest));
     }
@@ -61,7 +66,7 @@ public class ClientService {
     @Test
     void testCreate_DuplicateEmail() {
 
-        ClientDTORequest clientDTORequest =ClientDTORequest.builder().email("test@example.com").build();
+        ClientDTORequest clientDTORequest =ClientDTORequest.builder().email("test@example.com").password("123456").build();
         when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().email("test@example.com").build());
         when(clientRepository.findByEmail(clientDTORequest.getEmail())).thenReturn(Client.builder().build());
         assertThrows(BussinesException.class, () -> clientServices.create(clientDTORequest));
@@ -100,7 +105,7 @@ public class ClientService {
                 .build();
         UUID clientId = UUID.randomUUID();
         Client clientFromRepository = Client.builder().build();
-
+        when(clientMapper.convertToEntity(clientDTORequest)).thenReturn(Client.builder().email("test@example.com").build());
         when(clientRepository.findByIdAndActive(clientId,true)).thenReturn(client);
         when(clientRepository.save(any(Client.class))).thenReturn(clientFromRepository);
 

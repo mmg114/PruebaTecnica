@@ -7,9 +7,7 @@ public class PasswordValidator {
 
     private final String expresionRegular="^.*$";
 
-
-
     public boolean isValidPassword(String password) {
-        return password.matches(expresionRegular);
+        return password != null && password.matches(expresionRegular);
     }
 }
