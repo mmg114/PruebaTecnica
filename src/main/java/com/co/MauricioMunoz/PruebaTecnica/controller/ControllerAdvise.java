@@ -59,7 +59,12 @@ public class ControllerAdvise {
         ErrorDTO errorDTO = ErrorDTO.builder().mensaje("Error En la operacion Contactar con admin").build();
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = IOException.class)
+    public ResponseEntity<ErrorDTO> JorgeError(IOException ex){
+        ErrorDTO errorDTO = ErrorDTO.builder().mensaje("Error En la operacion Contactar con admin").build();
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+    }
 }
 
 
