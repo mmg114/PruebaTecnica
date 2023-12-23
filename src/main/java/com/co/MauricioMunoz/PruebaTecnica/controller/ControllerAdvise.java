@@ -60,6 +60,14 @@ public class ControllerAdvise {
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = ArrayIndexOutOfBoundsException.class)
+    public ResponseEntity<ErrorDTO> ArrayPointerExcetion(ArrayIndexOutOfBoundsException ex){
+        ErrorDTO errorDTO = ErrorDTO.builder().mensaje("El arreglo no funciono").build();
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+    }
+
+
 }
 
 
